@@ -1,161 +1,160 @@
-import {StyleSheet, View, Text, Button, TextInput} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, Button, StyleSheet, Text, Image, FlatList, TouchableOpacity } from 'react-native';
+import * as Font from 'expo-font';
 
 export default function App() {
-    return (
-        <View style={styles.appContainer}>
-            <View style={styles.inputContainer}>
-                <TextInput
-                    placeholder="Your course goal!"
-                    style={styles.textInput}
-                />
-                <Button title="ADD GOAL" color="#2196F3" onPress={() => {}} />
-            </View>
+  const [enteredGoalText, setEnteredGoalText] = useState('');
+  const [courseGoals, setCourseGoals] = useState([]);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
 
-            <View>
-                <Text style={styles.goalsText}>List of Goals</Text>
-            </View>
-        </View>
+  useEffect(() => {
+    const loadFonts = async () => {
+      try {
+        await Font.loadAsync({
+          'Brayles': require('@/assets/fonts/Brayles.ttf'),
+        });
+        setFontsLoaded(true);
+      } catch (error) {
+        console.error('Error loading font:', error);
+      }
+    };
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
+  const goalInputHandler = (enteredText) => {
+    setEnteredGoalText(enteredText);
+  };
+
+  const addGoalHandler = () => {
+    if (enteredGoalText.trim() === '') {
+      return;
+    }
+    setCourseGoals((currentCourseGoals) => [
+      ...currentCourseGoals,
+      enteredGoalText,
+    ]);
+    setEnteredGoalText('');
+  };
+
+  const removeGoalHandler = (index) => {
+    setCourseGoals((currentCourseGoals) =>
+      currentCourseGoals.filter((_, i) => i !== index)
     );
-}
+  };
 
-const styles = StyleSheet.create({
-    appContainer: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        paddingTop: 50,
-        paddingHorizontal: 16,
-    },
-    inputContainer: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 24,
-            borderBottomWidth: 1,
-            borderBottomColor: '#cccccc',
-            flex: 1,
-    },
-    textInput: {
-        borderWidth: 1,
-        borderColor: '#cccccc',
-        width: '70%',
-        marginRight: 8,
-        padding: 13,
-    },
-    goalsContainer: {
-        flex: 5,
-    },
-    goalsText: {
-        marginTop: 16,
-        fontWeight: 'bold',
-    },
-});
+  const renderGoalItem = ({ item, index }) => (
+    <View style={styles.goalItem}>
+      <Text style={styles.goalText}>🎯 {item}</Text>
+      <TouchableOpacity style={styles.removeButton} onPress={() => removeGoalHandler(index)}>
+        <Text style={styles.removeText}>Remove</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
-
-/*
-import {StyleSheet, View, Text, Button } from 'react-native';
-
-export default function App() {
-    return (
-        <View style={styles.container}>
-            <View>
-                <Text style={styles.text}> Team 63 </Text>
-                <Text style={styles.text}> Team Members: </Text>
-                <Text style={styles.text}> Clarito, Vincent Maverick </Text>
-                <Text style={styles.text}> Estacion, Kenneth </Text>
-                <Text style={styles.text}> Mendoza, Paulo </Text>
-                <Text style={styles.text}> Rabang, Daniela Marie </Text>
-            </View>
-            <View>
-                <Button title="Tap me!" color="green" onPress={() => alert('Button Pressed!')} />
-            </View>
-        </View>
-    );
-}
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    text: {
-        margin: 16,
-        borderColor: 'red',
-        borderWidth: 2,
-        backgroundColor: 'blue',
-        color: 'white',
-        padding: 16,
-    },
-});
-
-
-
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-
-export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/logo.png')}
+    <View style={styles.appContainer}>
+      <Image source={require('@/assets/images/goal-setting-basics.jpg')} style={styles.logo} resizeMode="cover" />
+      <View style={styles.inputContainer}>
+        <TextInput
+          onChangeText={goalInputHandler}
+          style={styles.textInput}
+          placeholder="Your Course Goal"
+          value={enteredGoalText}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome, We are the TEAM 63!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView>
-      <ThemedText style={{ color: 'blue' }}>Clarito, Vincent Maverick</ThemedText>
-      <ThemedText style={{ color: 'red' }}>Estacion, Kenneth</ThemedText>
-      <ThemedText style={{ color: 'green' }}>Mendoza, Paulo</ThemedText>
-      <ThemedText style={{ color: 'purple' }}>Rabang, Daniela Marie</ThemedText>
-    </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        <Button title="Add Goal" color='skyblue' onPress={addGoalHandler} />
+      </View>
+      <Text style={styles.listTitle}>List of goals:</Text>
+      <View style={styles.goalListContainer}>
+        <FlatList
+          style={styles.goalsContainer}
+          data={courseGoals}
+          renderItem={renderGoalItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  logo: {
+    width: '100%',
+    height: '50%',
+    borderRadius: 10,
+    marginBottom: 30,
+  },
+  appContainer: {
+    flex: 1,
+    backgroundColor: '#f5e8d7',
+    padding: 50,
     alignItems: 'center',
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  inputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 24,
+    width: '80%',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#cccccc',
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    width: '70%',
+    padding: 13,
+    marginRight: 8,
+  },
+  listTitle: {
+    fontSize: 24,
+    marginVertical: 16,
+    fontFamily: 'Brayles',
+  },
+  goalsContainer: {
+    flex: 4,
+    marginTop: 20,
+    width: '100%',
+  },
+  goalItem: {
+    backgroundColor: '#dfe6e9',
+    padding: 15,
+    marginVertical: 8,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowColor: '#2d3436',
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  goalListContainer: {
+    flex: 1,
+    height: '60%',
+    width: '100%',
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 10,
+    shadowColor: '#2d3436',
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  goalText: {
+    fontSize: 16,
+    color: '#2d3436',
+  },
+  removeButton: {
+    backgroundColor: '#ff7675',
+    padding: 5,
+    borderRadius: 5,
+  },
+  removeText: {
+    color: '#fff',
+    fontSize: 14,
   },
 });
-
-*/
