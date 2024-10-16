@@ -1,4 +1,5 @@
 import React from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 function GoalItem(props) {
@@ -26,6 +27,7 @@ const styles = StyleSheet.create({
   goalText: {
     color: '#2d3436',
     fontSize: 18,
+    marginRight: 20,
   },
   removeButton: {
     backgroundColor: '#ff7675',

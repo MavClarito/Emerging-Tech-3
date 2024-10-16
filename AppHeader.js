@@ -5,7 +5,7 @@ const AppHeader = () => {
   return (
     <View style={styles.headerContainer}>
       <Image
-        source={require('@/assets/images/goal-setting-basics.jpg')}
+        source={require('@/assets/images/goal-setting-basics.png')}
         style={styles.logo}
         resizeMode="cover"
       />
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   logo: {
-    width: '200%',
+    width: '100%',
     height: 200,
     borderRadius: 10,
   },
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 10,
-    fontFamily: 'Brayles',
+    fontFamily: 'Roboto Mono',
   },
 });
 

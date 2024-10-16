@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, TextInput, StyleSheet, Pressable, Text } from 'react-native';
+import { Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
 
 const GoalInput = ({ onAddGoal }) => {
   const [enteredGoalText, setEnteredGoalText] = useState('');
@@ -24,27 +27,31 @@ const GoalInput = ({ onAddGoal }) => {
         placeholder="Your Course Goal"
         value={enteredGoalText}
       />
-      <TouchableOpacity style={styles.addButton} onPress={addGoalHandler}>
+      <Pressable style={({ pressed }) => [ styles.addButton, pressed ? styles.buttonPressed : null,
+        ]} onPress={addGoalHandler} onPressIn={() => console.log('Pressed in')}
+            onPressOut={() => console.log('Pressed out')}
+            onLongPress={() => console.log('Long pressed')} android_ripple={{ color: 'blue' }}>
         <Text style={styles.addButtonText}>Add Goal</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   inputContainer: {
+    width: width * 0.9,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
-    width: '80%',
   },
+
   textInput: {
     borderWidth: 1,
     borderColor: '#cccccc',
     backgroundColor: '#ffffff',
     borderRadius: 10,
-    width: '100%',
+    width: '80%',
     padding: 13,
     marginRight: 8,
   },
@@ -55,6 +62,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonPressed: {
+    backgroundColor: 'deepskyblue',
   },
   addButtonText: {
     color: '#ffffff',
