@@ -1,42 +1,31 @@
 import React from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-function GoalItem(props) {
+const GoalItem = ({ text, onRemove }) => {
   return (
     <View style={styles.goalItem}>
-      <Text style={styles.goalText}>🎯 {props.text}</Text>
-      <TouchableOpacity style={styles.removeButton} onPress={props.onRemove}>
-        <Text style={styles.removeText}>Remove</Text>
+      <Text style={styles.goalText}>🎯 {text}</Text>
+      <TouchableOpacity onPress={onRemove}>
+        <Icon name="delete" size={24} color="#ff7675" />
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   goalItem: {
-    backgroundColor: '#dfe6e9',
-    padding: 10,
-    borderRadius: 5,
-    marginVertical: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 60,
+    padding: 10,
+    marginVertical: 5,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 5,
+    elevation: 1,
   },
   goalText: {
-    color: '#2d3436',
-    fontSize: 18,
-    marginRight: 20,
-  },
-  removeButton: {
-    backgroundColor: '#ff7675',
-    padding: 5,
-    borderRadius: 5,
-  },
-  removeText: {
-    color: '#fff',
-    fontSize: 14,
+    fontSize: 16,
   },
 });
 
